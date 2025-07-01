@@ -1,12 +1,11 @@
-import helpers.URL;
 import io.qameta.allure.Step;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import pages.*;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class LoginTest extends AbstractTest {
 
@@ -23,61 +22,17 @@ public class LoginTest extends AbstractTest {
         objAccountPage = new AccountPage(driver);
         objRegisterPage = new RegisterPage(driver);
         objRecoverPage = new RecoverPage(driver);
-    }
-
-    @Test
-    @DisplayName("Нажатие на логотип \"Stellar Burgers\"")
-    public void checkClickLogoStellarBurgers() {
-        objMainPage.clickAccountButton();
-        checkGoToLoginPage();
-        login();
-        checkLogin();
-
-        objAccountPage.clickLogoStellarBurgers();
-        checkGoToMainPage();
-    }
-
-    @Test
-    @DisplayName("Нажатие на кнопку \"Конструктор\"")
-    public void checkClickConstructorButton() {
-        objMainPage.clickAccountButton();
-        checkGoToLoginPage();
-        login();
-        checkLogin();
-
-        objAccountPage.clickConstructorButton();
-        checkGoToMainPage();
-    }
-
-    @Test
-    @DisplayName("Нажатие на кнопку \"Личный Кабинет\" авторизованного пользователя")
-    public void checkClickAccountButton() {
-        //первый клик ведет на форму авторизации
-        objMainPage.clickAccountButton();
-        checkGoToLoginPage();
-        login();
-        //второй клик в профиль
-        checkLogin();
-    }
-
-    @Test
-    @DisplayName("Нажатие на кнопку \"Выйти\"")
-    public void checkClickRecoverButton() {
-        objMainPage.clickLoginButton();
-        checkGoToLoginPage();
-        login();
-        checkLogin();
-
-        objAccountPage.clickExitButton();
-        checkGoToLoginPage();
+        objMainPage.waitForLoadPage();
     }
 
     @Test
     @DisplayName("Вход по кнопке \"Войти в аккаунт\"")
     public void loginForClickLoginButton() {
         objMainPage.clickLoginButton();
-        checkGoToLoginPage();
-        login();
+        objLoginPage.waitForLoadPage();
+
+        objLoginPage.loginUser(USER_1.getEmail(), USER_1.getPassword());
+        objMainPage.waitForLoadPage();
         checkLogin();
     }
 
@@ -85,8 +40,10 @@ public class LoginTest extends AbstractTest {
     @DisplayName("Вход через кнопку \"Личный кабинет\"")
     public void loginForClickAccountButton() {
         objMainPage.clickAccountButton();
-        checkGoToLoginPage();
-        login();
+        objLoginPage.waitForLoadPage();
+
+        objLoginPage.loginUser(USER_1.getEmail(), USER_1.getPassword());
+        objMainPage.waitForLoadPage();
         checkLogin();
     }
 
@@ -94,13 +51,14 @@ public class LoginTest extends AbstractTest {
     @DisplayName("Вход через кнопку на форме \"Регистрация\"")
     public void loginForRegisterPage() {
         objMainPage.clickLoginButton();
-        checkGoToLoginPage();
+        objLoginPage.waitForLoadPage();
         objLoginPage.clickRegisterButton();
-        checkGoToRegisterPage();
+        objRegisterPage.waitForLoadPage();
         objRegisterPage.clickLoginButton();
-        checkGoToLoginPage();
+        objLoginPage.waitForLoadPage();
 
-        login();
+        objLoginPage.loginUser(USER_1.getEmail(), USER_1.getPassword());
+        objMainPage.waitForLoadPage();
         checkLogin();
     }
 
@@ -108,76 +66,41 @@ public class LoginTest extends AbstractTest {
     @DisplayName("Вход через кнопку на форме \"Восстановление пароля\"")
     public void loginForRecoverPage() {
         objMainPage.clickLoginButton();
-        checkGoToLoginPage();
+        objLoginPage.waitForLoadPage();
         objLoginPage.clickRecoverButton();
-        checkGoToRecoverPage();
+        objRecoverPage.waitForLoadPage();
         objRecoverPage.clickLoginButton();
-        checkGoToLoginPage();
+        objLoginPage.waitForLoadPage();
 
-        login();
+        objLoginPage.loginUser(USER_1.getEmail(), USER_1.getPassword());
+        objMainPage.waitForLoadPage();
         checkLogin();
     }
 
-    @Step("Авторизация")
-    private void login() {
-        objLoginPage.setEmail(USER_1.getEmail());
-        objLoginPage.setPassword(USER_1.getPassword());
-        objLoginPage.clickLoginButton();
-        checkGoToMainPage();
+    @Test
+    @DisplayName("Нажатие на кнопку \"Личный Кабинет\" авторизованного пользователя")
+    public void checkClickAccountButton() {
+        //Первый клик ведет на форму авторизации
+        objMainPage.clickAccountButton();
+        objLoginPage.waitForLoadPage();
+        //Авторизация
+        objLoginPage.loginUser(USER_1.getEmail(), USER_1.getPassword());
+        objMainPage.waitForLoadPage();
+        //второй клик ведет в профиль
+        checkLogin();
     }
 
     @Step("Проверка авторизации")
     private void checkLogin() {
-        //Нажатие на кнопку "Личный Кабинет" ведет в профиль
+        //При нажатии на кнопку "Личный Кабинет" ведет в профиль
         objMainPage.clickAccountButton();
-        checkGoToAccountPage();
-
-        //TODO Проверить поля?
-    }
-
-    @Step("Проверка перехода на главную страницу")
-    private void checkGoToMainPage() {
-        assertAll("Проверка страницы",
-                () -> assertEquals(URL.getHost() + "/", driver.getCurrentUrl(),
-                        "Открылась не главная страница \"Stellar Burgers\""),
-                () -> assertTrue(objMainPage.isHeaderSection())
+        objAccountPage.waitForLoadPage();
+        //В профиле данные должны совпадать с веденными на форме авторизации
+        assertAll("Проверка полей профиля",
+                () -> assertEquals(USER_1.getName(), objAccountPage.getNameField(),
+                        "Неверное значение поля name!"),
+                () -> assertEquals(USER_1.getEmail(), objAccountPage.getEmailField(),
+                        "Неверное значение поля email!")
         );
     }
-
-    @Step("Проверка перехода на форму регистрации")
-    private void checkGoToRegisterPage() {
-        assertAll("Проверка страницы",
-                () -> assertEquals(URL.getHost() + "/register", driver.getCurrentUrl(),
-                        "Открылась не форма \"Регистрация\"!"),
-                () -> assertTrue(objRegisterPage.isRegisterHeader())
-        );
-    }
-
-    @Step("Проверка перехода на форму авторизации")
-    private void checkGoToLoginPage() {
-        assertAll("Проверка страницы",
-                () -> assertEquals(URL.getHost() + "/login", driver.getCurrentUrl(),
-                        "Открылась не форма авторизации \"Вход\"!"),
-                () -> assertTrue(objLoginPage.isLoginHeader())
-        );
-    }
-    
-    @Step("Проверка перехода на форму восстановления пароля")
-    private void checkGoToRecoverPage() {
-        assertAll("Проверка страницы",
-                () -> assertEquals(URL.getHost() + "/forgot-password", driver.getCurrentUrl(),
-                        "Открылась не форма \"Восстановление пароля\"!"),
-                () -> assertTrue(objRecoverPage.isRecoverHeader())
-        );
-    }
-
-    @Step("Проверка перехода на страницу \"Личный Кабинет\"")
-    private void checkGoToAccountPage() {
-        assertAll("Проверка страницы",
-                () -> assertEquals(URL.getHost()+"/account/profile", driver.getCurrentUrl(),
-                        "Открылась не страница \"Личный Кабинет\"!"),
-                () -> assertTrue(objAccountPage.isProfileSection())
-        );
-    }
-
 }

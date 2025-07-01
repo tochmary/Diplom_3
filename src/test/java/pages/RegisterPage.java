@@ -1,8 +1,16 @@
 package pages;
 
+import helpers.URL;
+import io.qameta.allure.Step;
 import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
+
+import java.time.Duration;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 //Форма "Регистрация"
 public class RegisterPage extends BasePage {
@@ -30,6 +38,13 @@ public class RegisterPage extends BasePage {
         super(driver);
     }
 
+    // метод ожидания загрузки страницы: проверили видимость заголовка формы регистрации
+    public void waitForLoadPage() {
+        // ждем 8 секунд, пока появится веб-элемент с нужным текстом
+        new WebDriverWait(driver, Duration.ofSeconds(5))
+                .until(ExpectedConditions.visibilityOfElementLocated(registerHeader));
+    }
+
     //метод наличия заголовка
     public boolean isRegisterHeader() {
         return driver.findElement(registerHeader).isDisplayed();
@@ -37,16 +52,19 @@ public class RegisterPage extends BasePage {
 
     //метод для заполнения поля "Имя"
     public void setName(String name) {
+        driver.findElement(nameField).clear();
         driver.findElement(nameField).sendKeys(name);
     }
 
     //метод для заполнения поля "Email"
     public void setEmail(String email) {
+        driver.findElement(emailField).clear();
         driver.findElement(emailField).sendKeys(email);
     }
 
     //метод для заполнения поля "Пароль"
     public void setPassword(String password) {
+        driver.findElement(passwordField).clear();
         driver.findElement(passwordField).sendKeys(password);
     }
 
@@ -75,4 +93,20 @@ public class RegisterPage extends BasePage {
         driver.findElement(loginButton).click();
     }
 
+    @Step("Регистрация пользователя с name={name}, email={email}, password={password}")
+    public void registerUser(String name,
+                             String email,
+                             String password) {
+        setName(name);
+        setEmail(email);
+        setPassword(password);
+        clickRegisterButton();
+    }
+
+    @Step("Проверка нахождения на форме регистрации")
+    public void checkIsPage() {
+        waitForLoadPage();
+        assertEquals(URL.getHost() + "/register", driver.getCurrentUrl(),
+                "Открыта не форма \"Регистрация\"!");
+    }
 }

@@ -4,12 +4,15 @@ import helpers.URL;
 import io.qameta.allure.Step;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import java.time.Duration;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 //главная страница
-public class MainPage extends BasePage{
+public class MainPage extends BasePage {
 
     //заголовок главной страницы
     private final By headerSection = By.xpath(".//section/h1[text()='Соберите бургер']");
@@ -24,6 +27,13 @@ public class MainPage extends BasePage{
 
     public MainPage(WebDriver driver) {
         super(driver);
+    }
+
+    // метод ожидания загрузки страницы: проверили видимость заголовка главной страницы
+    public void waitForLoadPage() {
+        // ждем 8 секунд, пока появится веб-элемент с нужным текстом
+        new WebDriverWait(driver, Duration.ofSeconds(10))
+                .until(ExpectedConditions.visibilityOfElementLocated(headerSection));
     }
 
     //метод наличия заголовка
@@ -52,10 +62,9 @@ public class MainPage extends BasePage{
     }
 
     @Step("Проверка нахождения на главной страницы")
-    public void checkIsMainPage(String currentUrl) {
-        assertEquals(URL.getHost() + "/", currentUrl, //driver.getCurrentUrl(),
-                "Открыта не главная страница \"Stellar Burgers\"");
-        assertTrue(isHeaderSection());
+    public void checkIsPage() {
+        waitForLoadPage();
+        assertEquals(URL.getHost() + "/", driver.getCurrentUrl(),
+                "Открыта не главная страница \"Stellar Burgers\"!");
     }
-
 }

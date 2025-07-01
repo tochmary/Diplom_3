@@ -1,6 +1,4 @@
 import helpers.ApiSteps;
-import helpers.URL;
-import io.qameta.allure.Step;
 import model.User;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -10,7 +8,7 @@ import pages.LoginPage;
 import pages.MainPage;
 import pages.RegisterPage;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class RegisterTest extends AbstractTest {
     MainPage objMainPage;
@@ -23,26 +21,26 @@ public class RegisterTest extends AbstractTest {
     @BeforeEach
     public void beforeEach() {
         objMainPage = new MainPage(driver);
-        objRegisterPage = new RegisterPage(driver);
         objLoginPage = new LoginPage(driver);
+        objRegisterPage = new RegisterPage(driver);
+        objMainPage.waitForLoadPage();
 
         //Вход на форму авторизации
         objMainPage.clickAccountButton();
-        checkGoToLoginPage();
+        objLoginPage.waitForLoadPage();
 
         //Вход на форму регистрации
         objLoginPage.clickRegisterButton();
-        checkGoToRegisterPage();
+        objRegisterPage.waitForLoadPage();
     }
 
     @Test
     @DisplayName("Успешная регистрация")
     public void registerUser() {
-        objRegisterPage.setName(USER_2.getName());
-        objRegisterPage.setEmail(USER_2.getEmail());
-        objRegisterPage.setPassword(USER_2.getPassword());
-        objRegisterPage.clickRegisterButton();
-        checkGoToLoginPage();
+        objRegisterPage.registerUser(USER_2.getName(),
+                USER_2.getEmail(),
+                USER_2.getPassword());
+        objLoginPage.waitForLoadPage();
 
         //проверка авторизации через API
         accessToken2 = ApiSteps.loginUser(USER_2).getAccessToken();
@@ -51,46 +49,17 @@ public class RegisterTest extends AbstractTest {
     @Test
     @DisplayName("Неуспешная регистрация с некорректным паролем")
     public void registerFailedUserWithWrongPassword() {
-        objRegisterPage.setName(USER_2.getName());
-        objRegisterPage.setName(USER_2.getEmail());
-        objRegisterPage.setName("dary");
-        objRegisterPage.clickRegisterButton();
+        objRegisterPage.registerUser(USER_2.getName(),
+                USER_2.getEmail(),
+                "dary");
 
         //проверка существования сообщения о некорректном пароле
-        objRegisterPage.existPasswordMessage();
-        checkGoToRegisterPage();
+        assertTrue(objRegisterPage.existPasswordMessage());
+        objRegisterPage.checkIsPage();
     }
-
-    @Step("Проверка перехода на форму регистрации")
-    private void checkGoToRegisterPage() {
-        assertAll("Проверка страницы",
-                () -> assertEquals(URL.getHost() + "/register", driver.getCurrentUrl(),
-                        "Открылась не форма \"Регистрация\"!"),
-                () -> assertTrue(objRegisterPage.isRegisterHeader())
-        );
-    }
-
-    @Step("Проверка перехода на форму авторизации")
-    private void checkGoToLoginPage() {
-        assertAll("Проверка страницы",
-                () -> assertEquals(URL.getHost() + "/login", driver.getCurrentUrl(),
-                        "Открылась не форма авторизации \"Вход\"!"),
-                () -> assertTrue(objLoginPage.isLoginHeader())
-        );
-    }
-
-    @Step("Проверка перехода на главную страницу")
-    private void checkGoToMainPage() {
-        assertAll("Проверка страницы",
-                () -> assertEquals(URL.getHost() + "/", driver.getCurrentUrl(),
-                        "Открылась не главная страница \"Stellar Burgers\""),
-                () -> assertTrue(objMainPage.isHeaderSection())
-        );
-    }
-
 
     @AfterEach
     public void tearDown() {
-        if (accessToken2!=null) ApiSteps.deleteUser(accessToken2);
+        if (accessToken2 != null) ApiSteps.deleteUser(accessToken2);
     }
 }

@@ -1,22 +1,23 @@
+import helpers.ApiRequests;
 import helpers.ApiSteps;
 import helpers.Browser;
 import helpers.URL;
+import io.restassured.response.Response;
+import model.RespUser;
 import model.User;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.openqa.selenium.WebDriver;
 
-import java.time.format.DateTimeFormatter;
-
 abstract public class AbstractTest {
     protected WebDriver driver;
-    public static DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("dd.MM.yyyy");
     protected static final User USER_1 = new User(
             "mary_test@yandex.ru", "marypass", "Мария");
     String accessToken1;
 
     @BeforeEach
     public void setUp() {
+        clearData();
         //Создать тестового пользователя
         accessToken1 = ApiSteps.createUser(USER_1).getAccessToken();
         //драйвер для браузера Chrome
@@ -31,5 +32,19 @@ abstract public class AbstractTest {
         driver.quit();
         //Удалить тестового пользователя
         ApiSteps.deleteUser(accessToken1);
+    }
+
+    //TODO убрать
+    private void clearData(User user) {
+        Response response = ApiRequests.sendPostRequestLoginUser(user);
+        RespUser respUser = response.body().as(RespUser.class);
+        if (respUser.isSuccess()) {
+            ApiSteps.deleteUser(respUser.getAccessToken());
+        }
+    }
+
+    private void clearData() {
+        clearData(new User("mary_test@yandex.ru", "marypass", null));
+        clearData(new User("dary_test@yandex.ru", "darypass", null));
     }
 }

@@ -1,7 +1,15 @@
 package pages;
 
+import helpers.URL;
+import io.qameta.allure.Step;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
+
+import java.time.Duration;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 //Форма авторизации "Вход"
 public class LoginPage extends BasePage {
@@ -24,6 +32,13 @@ public class LoginPage extends BasePage {
         super(driver);
     }
 
+    // метод ожидания загрузки страницы: проверили видимость заголовка страницы "Вход"
+    public void waitForLoadPage() {
+        // ждем 8 секунд, пока появится веб-элемент с нужным текстом
+        new WebDriverWait(driver, Duration.ofSeconds(10))
+                .until(ExpectedConditions.visibilityOfElementLocated(loginHeader));
+    }
+
     //метод наличия заголовка
     public boolean isLoginHeader() {
         return driver.findElement(loginHeader).isDisplayed();
@@ -31,11 +46,13 @@ public class LoginPage extends BasePage {
 
     //метод для заполнения поля "Email"
     public void setEmail(String email) {
+        driver.findElement(emailField).clear();
         driver.findElement(emailField).sendKeys(email);
     }
 
     //метод для заполнения поля "Пароль"
     public void setPassword(String password) {
+        driver.findElement(passwordField).clear();
         driver.findElement(passwordField).sendKeys(password);
     }
 
@@ -54,4 +71,18 @@ public class LoginPage extends BasePage {
         driver.findElement(recoverButton).click();
     }
 
+    @Step("Авторизация пользователя с email={email}, password={password}")
+    public void loginUser(String email,
+                          String password) {
+        setEmail(email);
+        setPassword(password);
+        clickLoginButton();
+    }
+
+    @Step("Проверка нахождения на форме авторизации")
+    public void checkIsPage() {
+        waitForLoadPage();
+        assertEquals(URL.getHost() + "/login", driver.getCurrentUrl(),
+                "Открыта не форма авторизации \"Вход\"!");
+    }
 }
