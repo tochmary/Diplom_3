@@ -20,19 +20,19 @@ public class RegisterPage extends BasePage {
             ".//div[@class='Auth_login__3hAey']/h2[text()='Регистрация']");
     //Поле ввода "Name"
     private final By nameField = By.xpath(
-            ".//label[text()='Имя']/parent::div/input[@type='text' and @name='name']");
+            ".//label[text()='Имя']/parent::div/input[@name='name']");
     //Поле ввода "Email"
     private final By emailField = By.xpath(
-            ".//label[text()='Email']/parent::div/input[@type='text' and @name='name']");
+            ".//label[text()='Email']/parent::div/input[@name='name']");
     //Поле ввода "Пароль"
-    private final By passwordField = By.xpath(".//input[@type='password' and @name='Пароль']");
+    private final By passwordField = By.xpath(".//input[@name='Пароль']");
     //сообщение о некорректном пароле
     private final By passwordMessage = By.xpath(".//*[text()='Некорректный пароль']");
 
     //кнопка "Зарегистрироваться"
     private final By registerButton = By.xpath(".//button[text()='Зарегистрироваться']");
     //кнопка "Войти"
-    private final By loginButton = By.xpath(".//a[@href='/login' and text()='Войти']");
+    private final By loginButton = By.xpath(".//*[text()='Войти']");
 
     public RegisterPage(WebDriver driver) {
         super(driver);
@@ -43,11 +43,6 @@ public class RegisterPage extends BasePage {
         // ждем 8 секунд, пока появится веб-элемент с нужным текстом
         new WebDriverWait(driver, Duration.ofSeconds(5))
                 .until(ExpectedConditions.visibilityOfElementLocated(registerHeader));
-    }
-
-    //метод наличия заголовка
-    public boolean isRegisterHeader() {
-        return driver.findElement(registerHeader).isDisplayed();
     }
 
     //метод для заполнения поля "Имя"
@@ -68,15 +63,10 @@ public class RegisterPage extends BasePage {
         driver.findElement(passwordField).sendKeys(password);
     }
 
-    //существование сообщения о некорректности поля "* Фамилия"
+    //существование сообщения о некорректности поля "Пароль"
     public boolean existPasswordMessage() {
-        return existMessage(passwordMessage);
-    }
-
-    //существование сообщения о некорректности поля
-    public boolean existMessage(By field) {
         try {
-            driver.findElement(field);
+            driver.findElement(passwordMessage);
             return true;
         } catch (NoSuchElementException e) {
             return false;
@@ -101,12 +91,5 @@ public class RegisterPage extends BasePage {
         setEmail(email);
         setPassword(password);
         clickRegisterButton();
-    }
-
-    @Step("Проверка нахождения на форме регистрации")
-    public void checkIsPage() {
-        waitForLoadPage();
-        assertEquals(URL.getHost() + "/register", driver.getCurrentUrl(),
-                "Открыта не форма \"Регистрация\"!");
     }
 }

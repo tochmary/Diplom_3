@@ -17,15 +17,15 @@ public class LoginPage extends BasePage {
     //заголовок страницы "Вход"
     private final By loginHeader = By.xpath(".//div[@class='Auth_login__3hAey']/h2[text()='Вход']");
     //Поле ввода "Email"
-    private final By emailField = By.xpath(".//input[@type='text' and @name='name']");
+    private final By emailField = By.xpath(".//input[@name='name']");
     //Поле ввода "Пароль"
-    private final By passwordField = By.xpath(".//input[@type='password' and @name='Пароль']");
+    private final By passwordField = By.xpath(".//input[@name='Пароль']");
     //кнопка "Войти"
     private final By loginButton = By.xpath(".//button[text()='Войти']");
     //кнопка "Зарегистрироваться"
-    private final By registerButton = By.xpath(".//a[@href='/register' and text()='Зарегистрироваться']");
+    private final By registerButton = By.xpath(".//*[text()='Зарегистрироваться']");
     //кнопка "Восстановить пароль"
-    private final By recoverButton = By.xpath(".//a[@href='/forgot-password' and text()='Восстановить пароль']");
+    private final By recoverButton = By.xpath(".//*[text()='Восстановить пароль']");
 
 
     public LoginPage(WebDriver driver) {
@@ -37,11 +37,6 @@ public class LoginPage extends BasePage {
         // ждем 8 секунд, пока появится веб-элемент с нужным текстом
         new WebDriverWait(driver, Duration.ofSeconds(10))
                 .until(ExpectedConditions.visibilityOfElementLocated(loginHeader));
-    }
-
-    //метод наличия заголовка
-    public boolean isLoginHeader() {
-        return driver.findElement(loginHeader).isDisplayed();
     }
 
     //метод для заполнения поля "Email"
@@ -77,12 +72,5 @@ public class LoginPage extends BasePage {
         setEmail(email);
         setPassword(password);
         clickLoginButton();
-    }
-
-    @Step("Проверка нахождения на форме авторизации")
-    public void checkIsPage() {
-        waitForLoadPage();
-        assertEquals(URL.getHost() + "/login", driver.getCurrentUrl(),
-                "Открыта не форма авторизации \"Вход\"!");
     }
 }

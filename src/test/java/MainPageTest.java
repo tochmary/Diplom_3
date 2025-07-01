@@ -1,8 +1,11 @@
+import helpers.URL;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import pages.LoginPage;
 import pages.MainPage;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class MainPageTest extends AbstractTest {
 
@@ -20,7 +23,9 @@ public class MainPageTest extends AbstractTest {
     @DisplayName("Нажатие на кнопку \"Личный Кабинет\" неавторизованного пользователя")
     public void checkClickAccountButtonWithoutAuth() {
         objMainPage.clickAccountButton();
-        objLoginPage.checkIsPage();
+        objLoginPage.waitForLoadPage();
+        assertEquals(URL.getHost() + "/login", driver.getCurrentUrl(),
+                "Открыта не форма авторизации \"Вход\"!");
     }
 
     @Test

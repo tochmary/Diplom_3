@@ -36,11 +36,6 @@ public class MainPage extends BasePage {
                 .until(ExpectedConditions.visibilityOfElementLocated(headerSection));
     }
 
-    //метод наличия заголовка
-    public boolean isHeaderSection() {
-        return driver.findElement(headerSection).isDisplayed();
-    }
-
     //Клик на раздел "Булки"
     public void clickBunSection() {
         driver.findElement(bunSection).click();
@@ -59,12 +54,5 @@ public class MainPage extends BasePage {
     //Клик по кнопке "Войти в аккаунт"
     public void clickLoginButton() {
         driver.findElement(loginButton).click();
-    }
-
-    @Step("Проверка нахождения на главной страницы")
-    public void checkIsPage() {
-        waitForLoadPage();
-        assertEquals(URL.getHost() + "/", driver.getCurrentUrl(),
-                "Открыта не главная страница \"Stellar Burgers\"!");
     }
 }

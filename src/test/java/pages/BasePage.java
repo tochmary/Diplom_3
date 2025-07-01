@@ -8,11 +8,11 @@ abstract public class BasePage {
     protected WebDriver driver;
 
     //кнопка "Конструктор"
-    private final By constructorButton = By.xpath(".//p[text()='Конструктор']");
+    private final By constructorButton = By.xpath(".//*[text()='Конструктор']");
     //логотип "Stellar Burgers"
     private final By logoStellarBurgers = By.className("AppHeader_header__logo__2D0X2");
     //кнопка "Личный Кабинет"
-    private final By accountButton = By.xpath(".//p[text()='Личный Кабинет']");
+    private final By accountButton = By.xpath(".//*[text()='Личный Кабинет']");
 
     public BasePage(WebDriver driver) {
         this.driver = driver;

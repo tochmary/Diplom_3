@@ -15,14 +15,11 @@ import static org.junit.jupiter.api.Assertions.*;
 public class AccountPage extends BasePage {
 
     //Раздел "Профиль"
-    private final By profileSection = By.xpath(".//*[@href='/account/profile' and text()='Профиль']");
-
+    private final By profileSection = By.xpath(".//*[text()='Профиль']");
     //значение поля "Имя"
-    private final By nameField = By.xpath(".//input[@type='text' and @name='Name' and @disabled]");
-
+    private final By nameField = By.xpath(".//input[@name='Name' and @disabled]");
     //значение поля "Email"
-    private final By emailField = By.xpath(".//input[@type='text' and @name='name' and @disabled]");
-
+    private final By emailField = By.xpath(".//input[@name='name' and @disabled]");
     //кнопка "Выход"
     private final By exitButton = By.xpath(".//button[text()='Выход']");
 
@@ -35,11 +32,6 @@ public class AccountPage extends BasePage {
         // ждем 8 секунд, пока появится веб-элемент с нужным текстом
         new WebDriverWait(driver, Duration.ofSeconds(5))
                 .until(ExpectedConditions.visibilityOfElementLocated(profileSection));
-    }
-
-    //метод наличия заголовка
-    public boolean isProfileSection() {
-        return driver.findElement(profileSection).isDisplayed();
     }
 
     //Клик по кнопке "Выход"
@@ -55,12 +47,5 @@ public class AccountPage extends BasePage {
     //метод получения значение имени
     public String getEmailField() {
         return driver.findElement(emailField).getDomAttribute("value");
-    }
-
-    @Step("Проверка нахождения на странице \"Личный Кабинет\"")
-    public void checkIsPage() {
-        waitForLoadPage();
-        assertEquals(URL.getHost() + "/account/profile", driver.getCurrentUrl(),
-                "Открыта не страница \"Личный Кабинет\"!");
     }
 }
