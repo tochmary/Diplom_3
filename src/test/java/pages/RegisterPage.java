@@ -1,6 +1,5 @@
 package pages;
 
-import helpers.URL;
 import io.qameta.allure.Step;
 import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
@@ -9,8 +8,6 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.time.Duration;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 //Форма "Регистрация"
 public class RegisterPage extends BasePage {
@@ -83,7 +80,7 @@ public class RegisterPage extends BasePage {
         driver.findElement(loginButton).click();
     }
 
-    @Step("Регистрация пользователя с name={name}, email={email}, password={password}")
+    @Step("Регистрация пользователя")
     public void registerUser(String name,
                              String email,
                              String password) {

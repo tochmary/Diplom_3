@@ -1,6 +1,5 @@
 package pages;
 
-import helpers.URL;
 import io.qameta.allure.Step;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
@@ -8,8 +7,6 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.time.Duration;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 //Форма авторизации "Вход"
 public class LoginPage extends BasePage {
@@ -66,7 +63,7 @@ public class LoginPage extends BasePage {
         driver.findElement(recoverButton).click();
     }
 
-    @Step("Авторизация пользователя с email={email}, password={password}")
+    @Step("Авторизация пользователя")
     public void loginUser(String email,
                           String password) {
         setEmail(email);
