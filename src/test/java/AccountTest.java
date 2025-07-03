@@ -1,4 +1,3 @@
-import helpers.URL;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -36,7 +35,7 @@ public class AccountTest extends AbstractTest {
         objAccountPage.clickLogoStellarBurgers();
 
         objMainPage.waitForLoadPage();
-        assertEquals(URL.getHost() + "/", driver.getCurrentUrl(),
+        assertEquals(hostTest + "/", driver.getCurrentUrl(),
                 "Открыта не главная страница \"Stellar Burgers\"!");
     }
 
@@ -46,7 +45,7 @@ public class AccountTest extends AbstractTest {
         objAccountPage.clickConstructorButton();
 
         objMainPage.waitForLoadPage();
-        assertEquals(URL.getHost() + "/", driver.getCurrentUrl(),
+        assertEquals(hostTest + "/", driver.getCurrentUrl(),
                 "Открыта не главная страница \"Stellar Burgers\"!");
     }
 
@@ -59,8 +58,7 @@ public class AccountTest extends AbstractTest {
         objMainPage.clickAccountButton();
 
         objLoginPage.waitForLoadPage();
-        assertEquals(URL.getHost() + "/login", driver.getCurrentUrl(),
+        assertEquals(hostTest+ "/login", driver.getCurrentUrl(),
                 "Открыта не форма авторизации \"Вход\"!");
     }
-
 }

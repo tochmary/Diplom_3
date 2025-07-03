@@ -18,6 +18,8 @@ public class MainPage extends BasePage {
     private final By sauceSection = By.xpath(".//span[text()='Соусы']");
     //раздел "Начинки"
     private final By fillingSection = By.xpath(".//span[text()='Начинки']");
+    //выбранный раздел
+    private final By selectedSection = By.xpath("//div[contains(@class,'tab_tab_type_current__2BEPc')]/span");
     //кнопка "Войти в аккаунт"
     private final By loginButton = By.xpath(".//button[text()='Войти в аккаунт']");
 
@@ -45,6 +47,11 @@ public class MainPage extends BasePage {
     //Клик на раздел "Начинки"
     public void clickFillingSection() {
         driver.findElement(fillingSection).click();
+    }
+
+    //Метод получения выбранного раздела
+    public String getSelectedSection() {
+       return driver.findElement(selectedSection).getText();
     }
 
     //Клик по кнопке "Войти в аккаунт"

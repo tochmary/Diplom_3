@@ -1,4 +1,3 @@
-import helpers.URL;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -24,7 +23,7 @@ public class MainPageTest extends AbstractTest {
     public void checkClickAccountButtonWithoutAuth() {
         objMainPage.clickAccountButton();
         objLoginPage.waitForLoadPage();
-        assertEquals(URL.getHost() + "/login", driver.getCurrentUrl(),
+        assertEquals(hostTest + "/login", driver.getCurrentUrl(),
                 "Открыта не форма авторизации \"Вход\"!");
     }
 
@@ -33,20 +32,23 @@ public class MainPageTest extends AbstractTest {
     public void checkClickConstructorButton() {
         objMainPage.clickSauceSection();
         objMainPage.clickBunSection();
-        //TODO Проверь, что работают переходы к разделу
+        assertEquals("Булки", objMainPage.getSelectedSection(),
+                "Выбран некорректный раздел");
     }
 
     @Test
-    @DisplayName("Нажатие на раздел \"Соус\"")
+    @DisplayName("Нажатие на раздел \"Соусы\"")
     public void checkClickSauceSection() {
         objMainPage.clickSauceSection();
-        //TODO Проверь, что работают переходы к разделу
+        assertEquals("Соусы", objMainPage.getSelectedSection(),
+                "Выбран некорректный раздел");
     }
 
     @Test
     @DisplayName("Нажатие на раздел \"Начинки\"")
     public void checkClickFillingSection() {
         objMainPage.clickFillingSection();
-        //TODO Проверь, что работают переходы к разделу
+        assertEquals("Начинки", objMainPage.getSelectedSection(),
+                "Выбран некорректный раздел");
     }
 }

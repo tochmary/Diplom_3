@@ -13,7 +13,7 @@ import static io.restassured.RestAssured.given;
 
 public class ApiRequests {
     private final static RequestSpecification SPEC = new RequestSpecBuilder()
-            .setBaseUri(URL.getHost())
+            .setBaseUri(Config.getHost())
             .addHeader("Content-type", "application/json")
             .setRelaxedHTTPSValidation()
             .addFilter(new RequestLoggingFilter())

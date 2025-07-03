@@ -1,5 +1,4 @@
 import helpers.ApiSteps;
-import helpers.URL;
 import model.User;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -58,7 +57,7 @@ public class RegisterTest extends AbstractTest {
         //проверка существования сообщения о некорректном пароле
         assertTrue(objRegisterPage.existPasswordMessage());
         objRegisterPage.waitForLoadPage();
-        assertEquals(URL.getHost() + "/register", driver.getCurrentUrl(),
+        assertEquals(hostTest + "/register", driver.getCurrentUrl(),
                 "Открыта не форма \"Регистрация\"!");
     }
 
