@@ -15,9 +15,8 @@ public class RegisterTest extends AbstractTest {
     MainPage objMainPage;
     LoginPage objLoginPage;
     RegisterPage objRegisterPage;
-    private static final User USER_2 = new User(
-            "dary_test@yandex.ru", "darypass", "Дарья");
-    String accessToken2;
+    protected static final User USER_1 = new User("mary_test@yandex.ru", "marypass", "Мария");
+    protected String accessToken;
 
     @BeforeEach
     public void beforeEach() {
@@ -38,21 +37,21 @@ public class RegisterTest extends AbstractTest {
     @Test
     @DisplayName("Успешная регистрация")
     public void registerUser() {
-        objRegisterPage.registerUser(USER_2.getName(),
-                USER_2.getEmail(),
-                USER_2.getPassword());
+        objRegisterPage.registerUser(USER_1.getName(),
+                USER_1.getEmail(),
+                USER_1.getPassword());
         objLoginPage.waitForLoadPage();
 
         //проверка авторизации через API
-        accessToken2 = ApiSteps.loginUser(USER_2).getAccessToken();
+        accessToken = ApiSteps.loginUser(USER_1).getAccessToken();
     }
 
     @Test
     @DisplayName("Неуспешная регистрация с некорректным паролем")
     public void registerFailedUserWithWrongPassword() {
-        objRegisterPage.registerUser(USER_2.getName(),
-                USER_2.getEmail(),
-                "dary");
+        objRegisterPage.registerUser(USER_1.getName(),
+                USER_1.getEmail(),
+                "mary");
 
         //проверка существования сообщения о некорректном пароле
         assertTrue(objRegisterPage.existPasswordMessage());
@@ -63,6 +62,6 @@ public class RegisterTest extends AbstractTest {
 
     @AfterEach
     public void tearDown() {
-        if (accessToken2 != null) ApiSteps.deleteUser(accessToken2);
+        if (accessToken != null) ApiSteps.deleteUser(accessToken);
     }
 }

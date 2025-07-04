@@ -1,4 +1,7 @@
+import helpers.ApiSteps;
 import io.qameta.allure.Step;
+import model.User;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -8,7 +11,8 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class LoginTest extends AbstractTest {
-
+    protected static final User USER_1 = new User("mary_test@yandex.ru", "marypass", "Мария");
+    protected String accessToken1;
     MainPage objMainPage;
     LoginPage objLoginPage;
     AccountPage objAccountPage;
@@ -17,6 +21,9 @@ public class LoginTest extends AbstractTest {
 
     @BeforeEach
     public void beforeEach() {
+        //Создать тестового пользователя
+        accessToken1 = ApiSteps.createUser(USER_1).getAccessToken();
+
         objMainPage = new MainPage(driver);
         objLoginPage = new LoginPage(driver);
         objAccountPage = new AccountPage(driver);
@@ -102,5 +109,11 @@ public class LoginTest extends AbstractTest {
                 () -> assertEquals(USER_1.getEmail(), objAccountPage.getEmailField(),
                         "Неверное значение поля email!")
         );
+    }
+
+    @AfterEach
+    public void afterEach() {
+        //Удалить тестового пользователя
+        ApiSteps.deleteUser(accessToken1);
     }
 }

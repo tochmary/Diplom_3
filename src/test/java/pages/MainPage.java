@@ -51,7 +51,7 @@ public class MainPage extends BasePage {
 
     //Метод получения выбранного раздела
     public String getSelectedSection() {
-       return driver.findElement(selectedSection).getText();
+        return driver.findElement(selectedSection).getText();
     }
 
     //Клик по кнопке "Войти в аккаунт"

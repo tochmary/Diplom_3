@@ -10,10 +10,7 @@ import java.io.InputStream;
 import java.util.Properties;
 
 public class Config {
-    public static int nc;
-
     private final static Properties properties = new Properties();
-
     private final static String HOST_TEST = "https://stellarburgers.nomoreparties.site";
 
     static {
@@ -47,5 +44,4 @@ public class Config {
                 return new ChromeDriver();
         }
     }
-
 }
